@@ -1,0 +1,59 @@
+package com.wesclic.freshlydropped.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Entity
+@Table(name = "m_recipe")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class Recipe {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
+    @Column(name = "recipe_name")
+    private String recipeName;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @ManyToMany
+    @JoinTable(
+            name = "recipe_recipe_type",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_type_id")
+    )
+    private List<RecipeType> listRecipeTypes;
+
+    @ManyToMany
+    @JoinTable(
+            name = "recipe_country",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "country_id")
+    )
+    private List<Country> listCountries;
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    private List<Ingredient> listIngredients;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "recipe_id")
+    private List<Nutrition> listNutritions;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "thumbnail_image_id")
+    private RecipeImage thumbnailImage;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "detail_image_id")
+    private RecipeImage detailImage;
+
+}
