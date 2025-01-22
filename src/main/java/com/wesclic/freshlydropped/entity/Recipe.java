@@ -25,6 +25,9 @@ public class Recipe {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column
+    private int calorie;
+
     @ManyToMany
     @JoinTable(
             name = "recipe_recipe_type",
