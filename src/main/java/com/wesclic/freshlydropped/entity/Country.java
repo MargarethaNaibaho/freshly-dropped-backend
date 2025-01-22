@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "m_country")
 @Builder
@@ -17,6 +19,9 @@ public class Country {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "country_name")
+    @Column(name = "country_name", unique = true)
     private String countryName;
+
+    @ManyToMany(mappedBy = "listCountries")
+    private List<Recipe> recipes;
 }

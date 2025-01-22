@@ -19,7 +19,7 @@ public class RecipeType {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "recipe_type_name")
+    @Column(name = "recipe_type_name", unique = true)
     private String recipeTypeName;
 
     @ManyToMany(mappedBy = "listRecipeTypes")
