@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface CountryService {
     Country createNewCountry(CountryRequest countryRequest);
+    Country getCountryById(String id);
 }

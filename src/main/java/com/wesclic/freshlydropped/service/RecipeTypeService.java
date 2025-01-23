@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface RecipeTypeService {
     RecipeType createNewRecipeType(RecipeTypeRequest recipeTypeRequest);
+    RecipeType getRecipeTypeById(String id);
 }

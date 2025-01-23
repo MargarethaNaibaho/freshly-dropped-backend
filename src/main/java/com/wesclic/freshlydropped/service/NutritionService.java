@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface NutritionService {
     Nutrition createNewNutrition(NutritionRequest nutritionRequest);
+    Nutrition getNutritionById(String id);
 }

@@ -32,4 +32,10 @@ public class CountryServiceImpl implements CountryService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Country already exists");
         }
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Country getCountryById(String id) {
+        return countryRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Country not found"));
+    }
 }

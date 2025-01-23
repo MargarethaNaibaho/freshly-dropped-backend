@@ -31,4 +31,10 @@ public class NutritionServiceImpl implements NutritionService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Nutrition getNutritionById(String id) {
+        return nutritionRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nutrition not found"));
+    }
 }
