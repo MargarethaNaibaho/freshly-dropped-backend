@@ -1,7 +1,12 @@
 package com.wesclic.freshlydropped.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "m_user_credential")
@@ -23,4 +28,8 @@ public class UserCredential {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany(mappedBy = "userCredential")
+    @JsonIgnore
+    private List<CustomerRecipeFavorite> listFavoriteRecipes;
 }

@@ -3,10 +3,13 @@ package com.wesclic.freshlydropped.controller;
 import com.wesclic.freshlydropped.dto.request.*;
 import com.wesclic.freshlydropped.dto.response.CommonResponse;
 import com.wesclic.freshlydropped.dto.response.NewRecipeResponse;
+import com.wesclic.freshlydropped.dto.response.RecipeThumbnailResponse;
 import com.wesclic.freshlydropped.entity.Recipe;
 import com.wesclic.freshlydropped.service.RecipeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/recipe")
 @RequiredArgsConstructor
 public class RecipeController {
     private final RecipeService recipeService;
 
-    @PostMapping(value = "/recipe", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createNewRecipe(@RequestParam String recipeName,
                                              @RequestParam String description,
                                              @RequestParam int calorie,
@@ -59,7 +62,7 @@ public class RecipeController {
                 .body(commonResponse);
     }
 
-    @GetMapping("/recipe/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getRecipeById(@PathVariable String id){
         Recipe recipe = recipeService.getRecipeById(id);
         CommonResponse<Recipe> commonResponse = CommonResponse.<Recipe>builder()
@@ -70,5 +73,43 @@ public class RecipeController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(commonResponse);
+    }
+
+    @GetMapping()
+    public ResponseEntity<?> getAllRecipes(){
+        List<RecipeThumbnailResponse> allRecipesForThumbnail = recipeService.getAllThumbnailRecipe();
+        CommonResponse<List<RecipeThumbnailResponse>> commonResponse = CommonResponse.<List<RecipeThumbnailResponse>>builder()
+                .message("Successfully get all recipes")
+                .statusCode(HttpStatus.OK.value())
+                .data(allRecipesForThumbnail)
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(commonResponse);
+    }
+
+    @GetMapping("/{id}/thumbnailImage")
+    public ResponseEntity<?> downloadThumbnailImage(@PathVariable String id){
+        Resource resource = recipeService.getThumbnailImageById(id);
+
+        String headerValues = "inline; attachment; filename=\"" + resource.getFilename() + "\"";
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header(HttpHeaders.CONTENT_DISPOSITION, headerValues)
+                .contentType(MediaType.parseMediaType("image/png"))
+                .body(resource);
+    }
+
+    @GetMapping("/{id}/detailImage")
+    public ResponseEntity<?> downloadDetailImage(@PathVariable String id){
+        Resource resource = recipeService.getDetailImageById(id);
+
+        String headerValues = "inline; attachment; filename=\"" + resource.getFilename() + "\"";
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header(HttpHeaders.CONTENT_DISPOSITION, headerValues)
+                .contentType(MediaType.parseMediaType("image/png"))
+                .body(resource);
     }
 }

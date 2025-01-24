@@ -1,11 +1,14 @@
 package com.wesclic.freshlydropped.service.impl;
 
 import com.wesclic.freshlydropped.dto.request.*;
+import com.wesclic.freshlydropped.dto.response.FileResponse;
 import com.wesclic.freshlydropped.dto.response.NewRecipeResponse;
+import com.wesclic.freshlydropped.dto.response.RecipeThumbnailResponse;
 import com.wesclic.freshlydropped.entity.*;
 import com.wesclic.freshlydropped.repository.RecipeRepository;
 import com.wesclic.freshlydropped.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,9 +88,51 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Transactional(readOnly = true)
-
     @Override
     public Recipe getRecipeById(String id) {
         return recipeRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found"));
+    }
+
+    @Override
+    public List<RecipeThumbnailResponse> getAllThumbnailRecipe() {
+        System.out.println("ini masih berhasil");
+        List<Recipe> allRecipes = recipeRepository.findAll();
+        System.out.println("ini testing terpanggil");
+//        System.out.println(allRecipes);
+
+        List<RecipeThumbnailResponse> listRecipeThumbnailResponse = new ArrayList<>();
+        for(Recipe recipe : allRecipes){
+            FileResponse thumbnailImage = FileResponse.builder()
+                    .filename(recipe.getThumbnailImage().getName())
+                    .url("http://192.168.100.81:8080/api/v1/recipe/" + recipe.getId() + "/thumbnailImage")
+                    .build();
+
+            RecipeThumbnailResponse recipeThumbnailResponse = RecipeThumbnailResponse.builder()
+                    .recipeId(recipe.getId())
+                    .recipeName(recipe.getRecipeName())
+                    .description(recipe.getDescription())
+                    .countUserStar(recipe.getCountUserStar())
+                    .calorie(recipe.getCalorie())
+                    .listNutritions(recipe.getListNutritions())
+                    .thumbnailImage(thumbnailImage)
+                    .build();
+
+            listRecipeThumbnailResponse.add(recipeThumbnailResponse);
+        }
+        return listRecipeThumbnailResponse;
+    }
+
+    @Override
+    public Resource getThumbnailImageById(String id) {
+        Recipe recipe = getRecipeById(id);
+        Resource resource = recipeImageService.findByPath(recipe.getThumbnailImage().getPath());
+        return resource;
+    }
+
+    @Override
+    public Resource getDetailImageById(String id) {
+        Recipe recipe = getRecipeById(id);
+        Resource resource = recipeImageService.findByPath(recipe.getDetailImage().getPath());
+        return resource;
     }
 }

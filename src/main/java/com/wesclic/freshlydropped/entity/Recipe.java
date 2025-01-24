@@ -1,5 +1,7 @@
 package com.wesclic.freshlydropped.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -71,4 +73,7 @@ public class Recipe {
     @JoinColumn(name = "detail_image_id")
     private RecipeImage detailImage;
 
+    @OneToMany(mappedBy = "recipe")
+    @JsonBackReference
+    private List<CustomerRecipeFavorite> listFavoriteRecipes;
 }

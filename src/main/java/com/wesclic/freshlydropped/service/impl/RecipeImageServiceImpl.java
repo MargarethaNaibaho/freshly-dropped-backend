@@ -4,6 +4,8 @@ import com.wesclic.freshlydropped.entity.RecipeImage;
 import com.wesclic.freshlydropped.repository.RecipeImageRepository;
 import com.wesclic.freshlydropped.service.RecipeImageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,6 +58,16 @@ public class RecipeImageServiceImpl implements RecipeImageService {
             return recipeImageRepository.saveAndFlush(recipeImage);
         } catch (IOException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error saving file");
+        }
+    }
+
+    @Override
+    public Resource findByPath(String path) {
+        try {
+            Path filePath = Paths.get(path);
+            return new UrlResource(filePath.toUri());
+        } catch (MalformedURLException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 }

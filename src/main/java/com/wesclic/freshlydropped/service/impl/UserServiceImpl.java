@@ -5,9 +5,11 @@ import com.wesclic.freshlydropped.entity.UserCredential;
 import com.wesclic.freshlydropped.repository.UserCredentialRepository;
 import com.wesclic.freshlydropped.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,11 @@ public class UserServiceImpl implements UserService {
                 .password(userCredential.getPassword())
                 .role(userCredential.getRole().getName())
                 .build();
+    }
+
+    @Override
+    public UserCredential getUserCredentialById(String userId) {
+        return userCredentialRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User credential not found"));
     }
 
     @Override
