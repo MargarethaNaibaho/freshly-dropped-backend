@@ -1,5 +1,6 @@
 package com.wesclic.freshlydropped.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,12 +29,16 @@ public class Recipe {
     @Column
     private int calorie;
 
+    @Column(name = "count_user_star")
+    private int countUserStar;
+
     @ManyToMany
     @JoinTable(
             name = "recipe_recipe_type",
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_type_id")
     )
+    @JsonManagedReference
     private List<RecipeType> listRecipeTypes;
 
     @ManyToMany
@@ -42,9 +47,11 @@ public class Recipe {
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "country_id")
     )
+    @JsonManagedReference
     private List<Country> listCountries;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Ingredient> listIngredients;
 
     @ManyToMany
@@ -53,6 +60,7 @@ public class Recipe {
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "nutrition_id")
     )
+    @JsonManagedReference
     private List<Nutrition> listNutritions;
 
     @OneToOne(cascade = CascadeType.ALL)

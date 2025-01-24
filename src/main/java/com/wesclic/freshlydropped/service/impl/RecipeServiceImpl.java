@@ -6,8 +6,10 @@ import com.wesclic.freshlydropped.entity.*;
 import com.wesclic.freshlydropped.repository.RecipeRepository;
 import com.wesclic.freshlydropped.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,32 +31,33 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public NewRecipeResponse createNewRecipe(NewRecipeRequest newRecipeRequest) {
         List<RecipeType> listRecipeType = new ArrayList<>();
-        for(FindRecipeTypeRequest findRecipeTypeRequest : newRecipeRequest.getListRecipeTypeId()){
-            RecipeType recipeType = recipeTypeService.getRecipeTypeById(findRecipeTypeRequest.getRecipeTypeId());
+        for(String findRecipeTypeRequest : newRecipeRequest.getListRecipeTypeId()){
+            System.out.println("ini dari recipe service impl " + findRecipeTypeRequest);
+            RecipeType recipeType = recipeTypeService.getRecipeTypeById(findRecipeTypeRequest);
             listRecipeType.add(recipeType);
         }
 
         List<Nutrition> listNutrition = new ArrayList<>();
-        for(FindNutritionRequest findNutritionRequest : newRecipeRequest.getListNutritionId()){
-            Nutrition nutrition = nutritionService.getNutritionById(findNutritionRequest.getNutritionId());
+        for(String findNutritionRequest : newRecipeRequest.getListNutritionId()){
+            Nutrition nutrition = nutritionService.getNutritionById(findNutritionRequest);
             listNutrition.add(nutrition);
         }
 
         List<Country> listCountry = new ArrayList<>();
-        for (FindCountryRequest findCountryRequest : newRecipeRequest.getListCountryId()){
-            Country country = countryService.getCountryById(findCountryRequest.getCountryId());
+        for (String findCountryRequest : newRecipeRequest.getListCountryId()){
+            Country country = countryService.getCountryById(findCountryRequest);
             listCountry.add(country);
         }
 
         List<Ingredient> listIngredient = new ArrayList<>();
-        for(IngredientRequest ingredientRequest : newRecipeRequest.getListIngredient()){
+        for(String ingredientRequest : newRecipeRequest.getListIngredient()){
             Ingredient ingredient = Ingredient.builder()
-                    .ingredientName(ingredientRequest.getIngredientName())
+                    .ingredientName(ingredientRequest)
                     .build();
             listIngredient.add(ingredient);
         }
 
-        ingredientService.createBulk(listIngredient);
+//        ingredientService.createBulk(listIngredient);
 
         RecipeImage thumbnailImage = recipeImageService.createThumbnailImage(newRecipeRequest.getThumbnailImage());
         RecipeImage detailImage = recipeImageService.createDetailImage(newRecipeRequest.getDetailImage());
@@ -62,6 +65,7 @@ public class RecipeServiceImpl implements RecipeService {
                 .recipeName(newRecipeRequest.getRecipeName())
                 .description(newRecipeRequest.getDescription())
                 .calorie(newRecipeRequest.getCalorie())
+                .countUserStar(newRecipeRequest.getCountUserStar())
                 .listRecipeTypes(listRecipeType)
                 .listCountries(listCountry)
                 .listNutritions(listNutrition)
@@ -70,10 +74,20 @@ public class RecipeServiceImpl implements RecipeService {
                 .detailImage(detailImage)
                 .build();
 
+        for(Ingredient ingredient : listIngredient){
+            ingredient.setRecipe(recipe);
+        }
         recipeRepository.saveAndFlush(recipe);
 
         return NewRecipeResponse.builder()
                 .recipe(recipe)
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+
+    @Override
+    public Recipe getRecipeById(String id) {
+        return recipeRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found"));
     }
 }

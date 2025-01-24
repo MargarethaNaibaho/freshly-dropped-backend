@@ -1,5 +1,7 @@
 package com.wesclic.freshlydropped.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,5 +25,6 @@ public class Nutrition {
     private String nutritionName;
 
     @ManyToMany(mappedBy = "listNutritions")
+    @JsonBackReference
     private List<Recipe> recipes;
 }

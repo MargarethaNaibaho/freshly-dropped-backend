@@ -23,17 +23,20 @@ public class NewRecipeRequest {
     @NotBlank(message = "Calorie is required")
     private int calorie;
 
+    @NotBlank(message = "Count user star is required")
+    private int countUserStar;
+
     @NotBlank(message = "List recipe type id is required")
-    private List<FindRecipeTypeRequest> listRecipeTypeId;
+    private List<String> listRecipeTypeId;
 
     @NotBlank(message = "List country id is required")
-    private List<FindCountryRequest> listCountryId;
+    private List<String> listCountryId;
 
     @NotBlank(message = "List nutrition id is required")
-    private List<FindNutritionRequest> listNutritionId;
+    private List<String> listNutritionId;
 
     @NotBlank(message = "List ingredient name is required")
-    private List<IngredientRequest> listIngredient;
+    private List<String> listIngredient;
 
     private MultipartFile thumbnailImage;
     private MultipartFile detailImage;

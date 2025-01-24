@@ -35,6 +35,7 @@ public class RecipeTypeServiceImpl implements RecipeTypeService {
     @Transactional(readOnly = true)
     @Override
     public RecipeType getRecipeTypeById(String id) {
+        System.out.println("id received" + id);
         return recipeTypeRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe type not found"));
     }
 }
