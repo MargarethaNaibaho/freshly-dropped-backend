@@ -3,6 +3,7 @@ package com.wesclic.freshlydropped.controller;
 import com.wesclic.freshlydropped.dto.request.*;
 import com.wesclic.freshlydropped.dto.response.CommonResponse;
 import com.wesclic.freshlydropped.dto.response.NewRecipeResponse;
+import com.wesclic.freshlydropped.dto.response.RecipeDetailResponse;
 import com.wesclic.freshlydropped.dto.response.RecipeThumbnailResponse;
 import com.wesclic.freshlydropped.entity.Recipe;
 import com.wesclic.freshlydropped.service.RecipeService;
@@ -64,8 +65,8 @@ public class RecipeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getRecipeById(@PathVariable String id){
-        Recipe recipe = recipeService.getRecipeById(id);
-        CommonResponse<Recipe> commonResponse = CommonResponse.<Recipe>builder()
+        RecipeDetailResponse recipe = recipeService.getRecipeById(id);
+        CommonResponse<RecipeDetailResponse> commonResponse = CommonResponse.<RecipeDetailResponse>builder()
                 .message("Successfully get recipe by id")
                 .statusCode(HttpStatus.OK.value())
                 .data(recipe)

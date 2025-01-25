@@ -90,6 +90,7 @@ public class AuthServiceImpl implements AuthService {
         return LoginResponse.builder()
                 .token(token)
                 .role(appUser.getRole().name())
+                .userId(appUser.getId())
                 .build();
     }
 }

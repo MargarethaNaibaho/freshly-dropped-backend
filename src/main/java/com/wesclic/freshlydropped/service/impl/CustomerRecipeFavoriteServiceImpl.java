@@ -35,7 +35,7 @@ public class CustomerRecipeFavoriteServiceImpl implements CustomerRecipeFavorite
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void createNewFavorite(String recipeId, String userCredentialId) {
-        Recipe recipe =  recipeService.getRecipeById(recipeId);
+        Recipe recipe =  recipeService.getRecipeById(recipeId).getRecipe();
         UserCredential userCredential = userService.getUserCredentialById(userCredentialId);
 
         CustomerRecipeFavorite customerRecipeFavorite = CustomerRecipeFavorite.builder()

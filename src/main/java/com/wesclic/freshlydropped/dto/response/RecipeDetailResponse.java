@@ -1,5 +1,6 @@
 package com.wesclic.freshlydropped.dto.response;
 
+import com.wesclic.freshlydropped.entity.Recipe;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LoginResponse {
-    private String token;
-    private String role;
-    private String userId;
+public class RecipeDetailResponse {
+    private Recipe recipe;
+    private FileResponse thumbnailImage;
+    private FileResponse detailImage;
 }
