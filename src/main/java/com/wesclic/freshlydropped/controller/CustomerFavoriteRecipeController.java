@@ -60,9 +60,9 @@ public class CustomerFavoriteRecipeController {
                 .body(commonResponse);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteFavoriteByFavoriteId(@PathVariable String id){
-        customerRecipeFavoriteService.deleteFavorite(id);
+    @DeleteMapping("/{userCredentialId}/{recipeId}")
+    public ResponseEntity<?> deleteFavoriteByFavoriteId(@PathVariable String userCredentialId, @PathVariable String recipeId){
+        customerRecipeFavoriteService.deleteFavorite(userCredentialId, recipeId);
         CommonResponse commonResponse = CommonResponse.builder()
                 .message("Successfully delete favorite recipe")
                 .statusCode(HttpStatus.OK.value())

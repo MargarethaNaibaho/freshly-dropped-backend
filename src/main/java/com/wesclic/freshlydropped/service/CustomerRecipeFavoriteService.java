@@ -11,6 +11,6 @@ public interface CustomerRecipeFavoriteService {
     CustomerRecipeFavorite getCustomerRecipeFavoriteById(String favoriteId);
     void createNewFavorite(String recipeId, String userCredentialId);
     boolean isRecipeFavoriteCustomer(String recipeId, String userCredentialId);
-    void deleteFavorite(String favoriteId);
+    void deleteFavorite(String userCredentialId, String recipeId);
     List<RecipeThumbnailResponse> getAllCustomerFavoriteRecipe(String userCredentialId);
 }

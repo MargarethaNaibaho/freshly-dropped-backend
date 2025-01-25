@@ -55,9 +55,9 @@ public class CustomerRecipeFavoriteServiceImpl implements CustomerRecipeFavorite
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deleteFavorite(String favoriteId) {
-        CustomerRecipeFavorite customerRecipeFavorite = getCustomerRecipeFavoriteById(favoriteId);
-        customerRecipeFavorite.softDelete();
+    public void deleteFavorite(String userCredentialId, String recipeId) {
+        Optional<CustomerRecipeFavorite> customerRecipeFavorite = customerRecipeFavoriteRepository.findCustomerRecipeFavoriteByUserCredentialIdAndRecipeIdAndDeletedAtIsNull(userCredentialId, recipeId);
+        customerRecipeFavorite.ifPresent(CustomerRecipeFavorite::softDelete);
     }
 
     @Transactional(readOnly = true)
