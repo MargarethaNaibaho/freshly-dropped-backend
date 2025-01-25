@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +47,12 @@ public class CustomerRecipeFavoriteServiceImpl implements CustomerRecipeFavorite
         customerRecipeFavoriteRepository.saveAndFlush(customerRecipeFavorite);
     }
 
+    @Override
+    public boolean isRecipeFavoriteCustomer(String recipeId, String userCredentialId) {
+        Optional<CustomerRecipeFavorite> recipeFavorite = customerRecipeFavoriteRepository.findCustomerRecipeFavoriteByUserCredentialIdAndRecipeIdAndDeletedAtIsNull(userCredentialId, recipeId);
+        return recipeFavorite.isPresent();
+    }
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteFavorite(String favoriteId) {
@@ -56,7 +63,7 @@ public class CustomerRecipeFavoriteServiceImpl implements CustomerRecipeFavorite
     @Transactional(readOnly = true)
     @Override
     public List<RecipeThumbnailResponse> getAllCustomerFavoriteRecipe(String userCredentialId) {
-        List<CustomerRecipeFavorite> listCustomerRecipeFavorite = customerRecipeFavoriteRepository.findCustomerRecipeFavoritesByUserCredentialId(userCredentialId);
+        List<CustomerRecipeFavorite> listCustomerRecipeFavorite = customerRecipeFavoriteRepository.findCustomerRecipeFavoritesByUserCredentialIdAndDeletedAtIsNull(userCredentialId);
 
         List<RecipeThumbnailResponse> listRecipeThumbnailResponse = new ArrayList<>();
         for(CustomerRecipeFavorite customerRecipeFavorite : listCustomerRecipeFavorite){

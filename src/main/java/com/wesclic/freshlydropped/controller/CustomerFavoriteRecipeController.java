@@ -29,6 +29,20 @@ public class CustomerFavoriteRecipeController {
                 .body(commonResponse);
     }
 
+    @GetMapping("/{userCredentialId}/{recipeId}")
+    public ResponseEntity<?> isItFavoriteRecipe(@PathVariable String userCredentialId, @PathVariable String recipeId){
+        boolean isItTrue = customerRecipeFavoriteService.isRecipeFavoriteCustomer(recipeId, userCredentialId);
+        HttpStatus status = isItTrue ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+
+        CommonResponse commonResponse = CommonResponse.builder()
+                .message(isItTrue ? "This is ur fav recipe" : "This is not ur fav recipe")
+                .statusCode(status.value())
+                .build();
+        return ResponseEntity
+                .status(status)
+                .body(commonResponse);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getAllFavoritesByUserId(@PathVariable String id){
         List<RecipeThumbnailResponse> allRecipes = customerRecipeFavoriteService.getAllCustomerFavoriteRecipe(id);

@@ -10,6 +10,7 @@ import java.util.List;
 public interface CustomerRecipeFavoriteService {
     CustomerRecipeFavorite getCustomerRecipeFavoriteById(String favoriteId);
     void createNewFavorite(String recipeId, String userCredentialId);
+    boolean isRecipeFavoriteCustomer(String recipeId, String userCredentialId);
     void deleteFavorite(String favoriteId);
     List<RecipeThumbnailResponse> getAllCustomerFavoriteRecipe(String userCredentialId);
 }
